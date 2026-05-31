@@ -18,6 +18,193 @@ from torchvision.datasets import CIFAR10, CIFAR100, SVHN, ImageFolder
 from tqdm import tqdm
 import random
 
+# adding the code below
+from torchvision.datasets import VisionDataset
+
+# adding the class
+class MedMNISTDataset(VisionDataset):
+
+    def __init__(self, npz_path, split="train", transform=None):
+
+        super().__init__(root="")
+
+        data = np.load(npz_path)
+
+        self.transform = transform
+
+        self.data = data[f"{split}_images"]
+
+        self.targets = data[f"{split}_labels"].squeeze()
+
+    def __len__(self):
+        return len(self.targets)
+
+    def __getitem__(self, idx):
+
+        img = self.data[idx]
+
+        img = Image.fromarray(img.astype(np.uint8))
+
+        if self.transform:
+            img = self.transform(img)
+
+        label = int(self.targets[idx])
+
+        return img, label
+
+
+# adding the def bloodmnist() below
+def bloodmnist_dataloaders(
+        batch_size=128,
+        data_dir="./data",
+        seed=1,
+        class_to_replace=None,
+        num_indexes_to_replace=None,
+        indexes_to_replace=None,
+        sample_forget_type="random",
+        only_mark=False,
+        no_aug=False,
+):
+
+    train_transform = transforms.Compose([
+        transforms.Resize((32,32)),
+        transforms.ToTensor()
+    ])
+
+    test_transform = transforms.Compose([
+        transforms.Resize((32,32)),
+        transforms.ToTensor()
+    ])
+
+    train_set = MedMNISTDataset(
+        os.path.join(data_dir,"bloodmnist.npz"),
+        split="train",
+        transform=train_transform
+    )
+
+    valid_set = MedMNISTDataset(
+        os.path.join(data_dir,"bloodmnist.npz"),
+        split="val",
+        transform=test_transform
+    )
+
+    test_set = MedMNISTDataset(
+        os.path.join(data_dir,"bloodmnist.npz"),
+        split="test",
+        transform=test_transform
+    )
+
+    num_class = 8
+
+    if class_to_replace is not None:
+
+        replace_class(
+            train_set,
+            class_to_replace,
+            num_indexes_to_replace=num_indexes_to_replace,
+            sample_Df__type=sample_forget_type,
+            seed=seed,
+            only_mark=only_mark,
+            num_classes=num_class
+        )
+
+    train_loader = DataLoader(
+        train_set,
+        batch_size=batch_size,
+        shuffle=True
+    )
+
+    val_loader = DataLoader(
+        valid_set,
+        batch_size=batch_size,
+        shuffle=False
+    )
+
+    test_loader = DataLoader(
+        test_set,
+        batch_size=batch_size,
+        shuffle=False
+    )
+
+    return train_loader,val_loader,test_loader
+
+
+# adding the def dermamnist() below
+def dermamnist_dataloaders(
+        batch_size=128,
+        data_dir="./data",
+        seed=1,
+        class_to_replace=None,
+        num_indexes_to_replace=None,
+        indexes_to_replace=None,
+        sample_forget_type="random",
+        only_mark=False,
+        no_aug=False,
+):
+
+    train_transform = transforms.Compose([
+        transforms.Resize((32,32)),
+        transforms.ToTensor()
+    ])
+
+    test_transform = transforms.Compose([
+        transforms.Resize((32,32)),
+        transforms.ToTensor()
+    ])
+
+    train_set = MedMNISTDataset(
+        os.path.join(data_dir,"dermamnist.npz"),
+        split="train",
+        transform=train_transform
+    )
+
+    valid_set = MedMNISTDataset(
+        os.path.join(data_dir,"dermamnist.npz"),
+        split="val",
+        transform=test_transform
+    )
+
+    test_set = MedMNISTDataset(
+        os.path.join(data_dir,"dermamnist.npz"),
+        split="test",
+        transform=test_transform
+    )
+
+    num_class = 7
+
+    if class_to_replace is not None:
+
+        replace_class(
+            train_set,
+            class_to_replace,
+            num_indexes_to_replace=num_indexes_to_replace,
+            sample_Df__type=sample_forget_type,
+            seed=seed,
+            only_mark=only_mark,
+            num_classes=num_class
+        )
+
+    train_loader = DataLoader(
+        train_set,
+        batch_size=batch_size,
+        shuffle=True
+    )
+
+    val_loader = DataLoader(
+        valid_set,
+        batch_size=batch_size,
+        shuffle=False
+    )
+
+    test_loader = DataLoader(
+        test_set,
+        batch_size=batch_size,
+        shuffle=False
+    )
+
+    return train_loader,val_loader,test_loader
+
+
 
 def cifar10_dataloaders_no_val(
     batch_size=128, data_dir="datasets/cifar10", num_workers=2
