@@ -34,7 +34,11 @@ class MedMNISTDataset(VisionDataset):
 
         self.data = data[f"{split}_images"]
 
-        self.targets = data[f"{split}_labels"].squeeze()
+        # self.targets = data[f"{split}_labels"].squeeze()
+
+        # NOTE : Commented above and add below line of code 
+        self.targets = data[f"{split}_labels"].squeeze().astype(np.int64)
+
 
     def __len__(self):
         return len(self.targets)
