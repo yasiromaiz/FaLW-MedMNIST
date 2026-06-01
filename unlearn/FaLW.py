@@ -140,6 +140,20 @@ def FaLW(data_loaders, model, criterion, optimizer, epoch, args, mask=None):
             target = target.cuda()
             target_random = target_random.cuda()
             source = source.cuda()
+
+            # note :  adding the below code 
+
+            loss_r = torch.tensor(
+                0.0,
+                device=image.device
+            )
+
+            loss_f = torch.tensor(
+                0.0,
+                device=image.device
+            )
+            
+
             retain_mask = (source == 0)
             forget_mask = (source == 1)
             outputs = model(image)
@@ -162,11 +176,11 @@ def FaLW(data_loaders, model, criterion, optimizer, epoch, args, mask=None):
 
             # note : commented above else and added below else
 
-            else:
-                loss_f = torch.tensor(
-                    0.0,
-                    device=image.device
-                )
+            # else:
+            #     loss_f = torch.tensor(
+            #         0.0,
+            #         device=image.device
+            #     )
 
 
             
@@ -200,11 +214,11 @@ def FaLW(data_loaders, model, criterion, optimizer, epoch, args, mask=None):
 
             # note : commented above else and added the below else
 
-            else:
-                loss_r = torch.tensor(
-                    0.0,
-                    device=image.device
-                )
+            # else:
+            #     loss_r = torch.tensor(
+            #         0.0,
+            #         device=image.device
+            #     )
 
             
             loss = (loss_f + loss_r)/target.shape[0]
