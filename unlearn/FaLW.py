@@ -145,8 +145,18 @@ def FaLW(data_loaders, model, criterion, optimizer, epoch, args, mask=None):
                 # loss_r = (w_r_i*criterion(outputs_r,target_r,reduction="none")).sum()
                 loss_r = criterion(outputs_r,target_r,reduction="none").sum()
             
+            # else:
+            #     assert(False)
+
+            # note : commented above else and added below else
+
             else:
-                assert(False)
+                loss_f = torch.tensor(
+                    0.0,
+                    device=image.device
+                )
+
+
             
             if forget_mask.sum() > 0:
                 # image_f = image[forget_mask]
@@ -171,8 +181,18 @@ def FaLW(data_loaders, model, criterion, optimizer, epoch, args, mask=None):
                 loss_f = (w_f_i * loss_f_samples).sum()
                 # exit(0)
                 # loss_f = (loss_f_samples).sum()
+
+
+            # else:
+            #     assert(False)
+
+            # note : commented above else and added the below else
+
             else:
-                assert(False)
+                loss_r = torch.tensor(
+                    0.0,
+                    device=image.device
+                )
 
             
             loss = (loss_f + loss_r)/target.shape[0]
@@ -192,20 +212,44 @@ def FaLW(data_loaders, model, criterion, optimizer, epoch, args, mask=None):
                     if param.grad is not None:
                         param.grad *= mask[name]
             optimizer.step()
+
+
+
             # measure accuracy and record loss on r
-            with torch.no_grad():
-                output_r = outputs_r.float()
-                loss_r = loss_r.float()
-                prec1_r = utils.accuracy(output_r.data, target_r)[0]
-                losses_r.update(loss_r.item(), target_r.size(0))
-                top1_r.update(prec1_r.item(), target_r.size(0))
-                # measure accuracy and record loss on f 
-                output_f = outputs_f.float()
-                loss_f = loss_f.float()
-                prec1_f = utils.accuracy(output_f.data, target_f)[0]
-                losses_f.update(loss_f.item(), target_f.size(0))
-                top1_f.update(prec1_f.item(), target_f.size(0))
+
+
+            # with torch.no_grad():
+            #     output_r = outputs_r.float()
+            #     loss_r = loss_r.float()
+            #     prec1_r = utils.accuracy(output_r.data, target_r)[0]
+            #     losses_r.update(loss_r.item(), target_r.size(0))
+            #     top1_r.update(prec1_r.item(), target_r.size(0))
+            #     # measure accuracy and record loss on f 
+            #     output_f = outputs_f.float()
+            #     loss_f = loss_f.float()
+            #     prec1_f = utils.accuracy(output_f.data, target_f)[0]
+            #     losses_f.update(loss_f.item(), target_f.size(0))
+            #     top1_f.update(prec1_f.item(), target_f.size(0))
             
+
+            # note: commented above and adding the below code
+
+
+            with torch.no_grad():
+                if retain_mask.sum() > 0:
+                    output_r = outputs_r.float()
+                    prec1_r = utils.accuracy(output_r.data, target_r)[0]
+                    losses_r.update(loss_r.item(), target_r.size(0))
+                    top1_r.update(prec1_r.item(), target_r.size(0))
+
+                if forget_mask.sum() > 0:
+                    output_f = outputs_f.float()
+                    prec1_f = utils.accuracy(output_f.data, target_f)[0]
+                    losses_f.update(loss_f.item(), target_f.size(0))
+                    top1_f.update(prec1_f.item(), target_f.size(0))
+
+
+
             if (i + 1) % args.print_freq == 0:
                 print("max w_f_i:",w_f_i.max(),'min w_f_i:',w_f_i.min())
                 end = time.time()
