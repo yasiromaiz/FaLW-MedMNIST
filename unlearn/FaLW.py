@@ -125,6 +125,15 @@ def FaLW(data_loaders, model, criterion, optimizer, epoch, args, mask=None):
             
         # train_class_sums = torch.zeros(args.num_classes,requires_grad=False).cuda()
         # train_class_counts = torch.zeros(args.num_classes,requires_grad=False).cuda()
+
+        with torch.no_grad():
+            mu_c, sigma_c = get_val_predict_distribution(
+                model,
+                args,
+                val_loader
+            )
+
+
         for it, (image, target,target_random ,source) in enumerate(train_loader):
             i = it + len(forget_loader)
             image = image.cuda()
@@ -134,7 +143,10 @@ def FaLW(data_loaders, model, criterion, optimizer, epoch, args, mask=None):
             retain_mask = (source == 0)
             forget_mask = (source == 1)
             outputs = model(image)
-            mu_c,sigma_c = get_val_predict_distribution(model,args,val_loader)
+
+            # mu_c,sigma_c = get_val_predict_distribution(model,args,val_loader)
+
+
             # calc loss for retain
             if retain_mask.sum() > 0 :
                 # image_r = image[retain_mask]
