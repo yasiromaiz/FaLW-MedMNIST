@@ -448,6 +448,17 @@ def accuracy(output, target, topk=(1,)):
     return res
 
 
+# adding the below code for chestmnist 
+def multilabel_accuracy(output, target):
+
+    pred = (torch.sigmoid(output) > 0.5).float()
+
+    correct = (pred == target).float()
+
+    return correct.mean() * 100
+
+
+
 def run_commands(gpus, commands, call=False, dir="commands", shuffle=True, delay=0.5):
     if len(commands) == 0:
         return

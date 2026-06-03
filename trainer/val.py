@@ -26,7 +26,16 @@ def validate(val_loader, model, criterion, args):
 
             # measure accuracy and record loss
             accuracy_metric.update(output,target)
-            prec1 = utils.accuracy(output.data, target)[0]
+            
+            # prec1 = utils.accuracy(output.data, target)[0]
+
+            # commenting above line and adding the below line of code for chestmnist
+            if args.dataset == "chestmnist":
+                prec1 = utils.multilabel_accuracy(output.data, target)
+            else:
+                prec1 = utils.accuracy(output.data, target)[0]
+
+
             losses.update(loss.item(), image.size(0))
             top1.update(prec1.item(), image.size(0))
 

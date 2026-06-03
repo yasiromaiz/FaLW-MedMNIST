@@ -64,7 +64,15 @@ def train(train_loader, model, criterion, optimizer, epoch, args, mask=None, l1=
             output = output_clean.float()
             loss = loss.float()
             # measure accuracy and record loss
-            prec1 = utils.accuracy(output.data, target)[0]
+
+            # prec1 = utils.accuracy(output.data, target)[0]
+
+            # adding the below code by commenting the above line
+            if args.dataset == "chestmnist":
+                prec1 = utils.multilabel_accuracy(output.data, target)
+            else:
+                prec1 = utils.accuracy(output.data, target)[0]
+
 
             losses.update(loss.item(), image.size(0))
             top1.update(prec1.item(), image.size(0))

@@ -61,7 +61,15 @@ def main():
     print(f"number of train dataset {len(train_loader.dataset)}")
     print(f"number of val dataset {len(val_loader.dataset)}")
 
-    criterion = nn.CrossEntropyLoss()
+    # criterion = nn.CrossEntropyLoss()
+
+    # commenting above line and adding the below code for chestmnist
+    if args.dataset == "chestmnist":
+        criterion = nn.BCEWithLogitsLoss()
+    else:
+        criterion = nn.CrossEntropyLoss()
+
+
     decreasing_lr = list(map(int, args.decreasing_lr.split(",")))
 
     optimizer = torch.optim.SGD(
