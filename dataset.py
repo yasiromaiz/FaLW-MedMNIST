@@ -57,6 +57,42 @@ class MedMNISTDataset(VisionDataset):
         return img, label
 
 
+# Adding the class of chestMNIST()
+class ChestMNISTDataset(VisionDataset):
+
+    def __init__(self, npz_path, split="train", transform=None):
+
+        super().__init__(root="")
+
+        data = np.load(npz_path)
+
+        self.transform = transform
+
+        self.data = data[f"{split}_images"]
+
+        self.targets = data[f"{split}_labels"].astype(np.float32)
+
+    def __len__(self):
+        return len(self.targets)
+
+    def __getitem__(self, idx):
+
+        img = self.data[idx]
+
+        img = Image.fromarray(img.astype(np.uint8))
+
+        if self.transform:
+            img = self.transform(img)
+
+        label = torch.tensor(
+            self.targets[idx],
+            dtype=torch.float32
+        )
+
+        return img, label 
+
+
+
 # adding the def bloodmnist() below
 def bloodmnist_dataloaders(
         batch_size=128,
@@ -208,6 +244,62 @@ def dermamnist_dataloaders(
 
     return train_loader,val_loader,test_loader
 
+
+# adding the chestmnist dataloaders()
+def chestmnist_dataloaders(
+        batch_size=128,
+        data_dir="./data",
+        seed=1,
+        **kwargs
+):
+
+    train_transform = transforms.Compose([
+        transforms.Resize((32,32)),
+        transforms.ToTensor()
+    ])
+
+    test_transform = transforms.Compose([
+        transforms.Resize((32,32)),
+        transforms.ToTensor()
+    ])
+
+    train_set = ChestMNISTDataset(
+        os.path.join(data_dir,"chestmnist.npz"),
+        split="train",
+        transform=train_transform
+    )
+
+    valid_set = ChestMNISTDataset(
+        os.path.join(data_dir,"chestmnist.npz"),
+        split="val",
+        transform=test_transform
+    )
+
+    test_set = ChestMNISTDataset(
+        os.path.join(data_dir,"chestmnist.npz"),
+        split="test",
+        transform=test_transform
+    )
+
+    train_loader = DataLoader(
+        train_set,
+        batch_size=batch_size,
+        shuffle=True
+    )
+
+    val_loader = DataLoader(
+        valid_set,
+        batch_size=batch_size,
+        shuffle=False
+    )
+
+    test_loader = DataLoader(
+        test_set,
+        batch_size=batch_size,
+        shuffle=False
+    )
+
+    return train_loader,val_loader,test_loader
 
 
 def cifar10_dataloaders_no_val(

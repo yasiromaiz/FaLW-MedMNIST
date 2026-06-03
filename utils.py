@@ -222,6 +222,34 @@ def setup_model_dataset(args):
         return model, train_full_loader, val_loader, test_loader, marked_loader
 
 
+    # adding the elif args.dataset = chestmnist below
+    elif args.dataset == "chestmnist":
+
+        classes = 14
+        args.num_classes = classes
+
+        train_full_loader, val_loader, test_loader = \
+            chestmnist_dataloaders(
+                batch_size=args.batch_size,
+                data_dir=args.data,
+                seed=args.seed
+            )
+
+        model = model_dict[args.arch](
+            num_classes=classes
+        )
+
+        marked_loader = train_full_loader
+
+        return (
+            model,
+            train_full_loader,
+            val_loader,
+            test_loader,
+            marked_loader
+        )
+
+
 
     elif args.dataset == "svhn":
         classes = 10
