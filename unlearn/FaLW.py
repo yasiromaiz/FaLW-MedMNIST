@@ -95,6 +95,7 @@ def FaLW(data_loaders, model, criterion, optimizer, epoch, args, mask=None):
         "bloodmnist",
         "dermamnist",
         "chestmnist",
+        "kvasir",
     ]:   
         
         # exit(0)
