@@ -123,7 +123,9 @@ class KvasirDataset(Dataset):
         if self.transform:
             img = self.transform(img)
 
-        return img, int(label)
+        # return img, int(label)
+        
+        return img, int(self.targets[idx])
 
 
 
