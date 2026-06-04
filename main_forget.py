@@ -113,8 +113,6 @@ def main():
 
 
 
-
-
     else:
         try:
             marked = forget_dataset.targets < 0
@@ -151,15 +149,32 @@ def main():
                 train_loader_full.dataset
             )
 
+
+
     print(f"number of retain dataset {len(retain_dataset)}")
     print(f"number of forget dataset {len(forget_dataset)}")
     unlearn_data_loaders = OrderedDict(
         retain=retain_loader, forget=forget_loader, val=val_loader, test=test_loader
     )
 
+    # adding the code below for kvasir
+    distribution = {}
+
+    for name, loader in unlearn_data_loaders.items():
+        utils.dataset_convert_to_test(loader.dataset, args)
+        distribution[name] = utils.calculate_dataset_distribution(
+            loader,
+            args
+        )
+
+    args.distribution = distribution
+
+
     criterion = nn.CrossEntropyLoss()
     evaluation_result = None
 
+    
+    
     if args.resume: 
         checkpoint = unlearn.load_unlearn_checkpoint(model, device, args)
 
@@ -187,7 +202,7 @@ def main():
             distribution[name] = utils.calculate_dataset_distribution(loader,args)
             print(f"{name} distribution: {distribution[name]}")
     
-        args.distribution = distribution
+        # args.distribution = distribution
 
         evaluation_result["distribution"] = distribution
         unlearn.save_unlearn_checkpoint(model, evaluation_result, args)
