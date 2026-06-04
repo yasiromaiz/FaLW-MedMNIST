@@ -187,8 +187,11 @@ def main():
             distribution[name] = utils.calculate_dataset_distribution(loader,args)
             print(f"{name} distribution: {distribution[name]}")
     
+        args.distribution = distribution
+
         evaluation_result["distribution"] = distribution
         unlearn.save_unlearn_checkpoint(model, evaluation_result, args)
+        
         
         
     if "new_accuracy" not in evaluation_result:
