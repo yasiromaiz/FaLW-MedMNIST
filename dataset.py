@@ -102,13 +102,28 @@ class KvasirDataset(Dataset):
             transform=transform
         )
 
-        self.targets = np.array(self.dataset.targets)
+        self.imgs = np.array(self.dataset.samples, dtype=object)
+
+        self.targets = np.array(
+            self.dataset.targets,
+            dtype=np.int64
+        )
+
+        self.transform = transform
 
     def __len__(self):
-        return len(self.dataset)
+        return len(self.targets)
 
     def __getitem__(self, idx):
-        return self.dataset[idx] 
+
+        path, label = self.imgs[idx]
+
+        img = Image.open(path).convert("RGB")
+
+        if self.transform:
+            img = self.transform(img)
+
+        return img, int(label)
 
 
 
