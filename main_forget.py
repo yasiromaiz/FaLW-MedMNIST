@@ -223,7 +223,20 @@ def main():
         utils.dataset_convert_to_test(forget_loader, args)
         utils.dataset_convert_to_test(test_loader, args)
 
-        shadow_train = torch.utils.data.Subset(retain_dataset, list(range(test_len)))
+        #shadow_train = torch.utils.data.Subset(retain_dataset, list(range(test_len)))
+        
+        # note : commented above line and added below line of code for the kvasir dataset
+        shadow_len = min(
+            len(retain_dataset),
+            len(test_loader.dataset)
+        )
+
+        shadow_train = torch.utils.data.Subset(
+            retain_dataset,
+            list(range(shadow_len))
+        )
+        
+        
         shadow_train_loader = torch.utils.data.DataLoader(
             shadow_train, batch_size=args.batch_size, shuffle=False
         )
