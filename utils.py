@@ -249,6 +249,43 @@ def setup_model_dataset(args):
             marked_loader
         )
 
+    # adding the below code for the kvasir
+    elif args.dataset == "kvasir":
+
+        classes = 8
+
+        args.num_classes = classes
+
+        train_full_loader, val_loader, test_loader = \
+            kvasir_dataloaders(
+                batch_size=args.batch_size,
+                data_dir=args.data,
+                seed=args.seed
+            )
+
+        marked_loader, _, _ = \
+            kvasir_dataloaders(
+                batch_size=args.batch_size,
+                data_dir=args.data,
+                seed=args.seed,
+                class_to_replace=args.class_to_replace,
+                num_indexes_to_replace=args.num_indexes_to_replace,
+                sample_forget_type=args.sample_forget_type,
+                only_mark=True
+            )
+
+        model = model_dict[args.arch](
+            num_classes=classes
+        )
+
+        return (
+            model,
+            train_full_loader,
+            val_loader,
+            test_loader,
+            marked_loader
+        )
+
 
 
     elif args.dataset == "svhn":

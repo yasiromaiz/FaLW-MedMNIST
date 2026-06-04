@@ -92,6 +92,25 @@ class ChestMNISTDataset(VisionDataset):
         return img, label 
 
 
+#adding the class for kvasir dataset
+class KvasirDataset(Dataset):
+
+    def __init__(self, root_dir, transform=None):
+
+        self.dataset = ImageFolder(
+            root=root_dir,
+            transform=transform
+        )
+
+        self.targets = np.array(self.dataset.targets)
+
+    def __len__(self):
+        return len(self.dataset)
+
+    def __getitem__(self, idx):
+        return self.dataset[idx] 
+
+
 
 # adding the def bloodmnist() below
 def bloodmnist_dataloaders(
@@ -300,6 +319,21 @@ def chestmnist_dataloaders(
     )
 
     return train_loader,val_loader,test_loader
+
+# adding the kvasir dataloaders()
+def kvasir_dataloaders(
+    batch_size=128,
+    data_dir="./data",
+    seed=1,
+    class_to_replace=None,
+    num_indexes_to_replace=None,
+    indexes_to_replace=None,
+    sample_forget_type="random",
+    only_mark=False,
+    no_aug=False,
+):
+    '''implemented the dataloader for kvasir '''
+    # pass
 
 
 def cifar10_dataloaders_no_val(
