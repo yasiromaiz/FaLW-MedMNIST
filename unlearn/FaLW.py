@@ -8,6 +8,7 @@ import torch.utils
 import torch.utils.data
 import utils
 
+
 from .impl import iterative_unlearn
 
 
@@ -170,8 +171,33 @@ def FaLW(data_loaders, model, criterion, optimizer, epoch, args, mask=None):
                 # w_r_i = calc_w_r_i(args.alpha,args.distribution['retain'],target_r).detach()
             
                 # loss_r = (w_r_i*criterion(outputs_r,target_r,reduction="none")).sum()
-                loss_r = criterion(outputs_r,target_r,reduction="none").sum()
+                
+                
+                # loss_r = criterion(outputs_r,target_r,reduction="none").sum()
             
+                # commented above line of code and added the below code 
+                # loss_r = torch.nn.functional.cross_entropy(
+                #     outputs_r,
+                #     target_r,
+                #     reduction="none"
+                # ).sum()
+
+                
+                if isinstance(criterion, torch.nn.CrossEntropyLoss):
+                    loss_r = torch.nn.functional.cross_entropy(
+                        outputs_r,
+                        target_r,
+                        reduction="none"
+                    ).sum()
+                else:
+                    loss_r = criterion(
+                        outputs_r,
+                        target_r,
+                        reduction="none"
+                    ).sum()
+
+
+
             # else:
             #     assert(False)
 
@@ -190,7 +216,33 @@ def FaLW(data_loaders, model, criterion, optimizer, epoch, args, mask=None):
                 target_f = target[forget_mask]
                 target_random_f = target_random[forget_mask]
                 outputs_f = outputs[forget_mask]
-                loss_f_samples = criterion(outputs_f,target_random_f,reduction="none")
+                
+                # loss_f_samples = criterion(outputs_f,target_random_f,reduction="none")
+                
+                # note: commented above line of code and added the below line of code 
+                # loss_f_samples = torch.nn.functional.cross_entropy(
+                #     outputs_f,
+                #     target_random_f,
+                #     reduction="none"
+                # )
+
+
+                if isinstance(criterion, torch.nn.CrossEntropyLoss):
+                    loss_f_samples = torch.nn.functional.cross_entropy(
+                        outputs_f,
+                        target_random_f,
+                        reduction="none"
+                    )
+                else:
+                    loss_f_samples = criterion(
+                        outputs_f,
+                        target_random_f,
+                        reduction="none"
+                    )
+
+
+                                
+                
                 probs = torch.nn.functional.softmax(outputs_f, dim=-1)
                 p_i = probs.gather(1, target_f.unsqueeze(1)).squeeze()
                 # ==============================
