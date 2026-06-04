@@ -28,7 +28,8 @@ def RL(data_loaders, model, criterion, optimizer, epoch, args, mask=None):
         "octmnist",
         "organamnist",
         "organcmnist",
-        "organsmnist"
+        "organsmnist",
+        "kvasir",
     ]:
         
         try:
