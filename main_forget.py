@@ -169,6 +169,10 @@ def main():
 
     args.distribution = distribution
 
+    # note: added these 2 lines below
+    print("distribution initialized")
+    print(args.distribution)
+
 
     criterion = nn.CrossEntropyLoss()
     evaluation_result = None
