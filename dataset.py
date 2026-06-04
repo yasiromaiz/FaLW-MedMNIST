@@ -124,7 +124,7 @@ class KvasirDataset(Dataset):
             img = self.transform(img)
 
         # return img, int(label)
-        
+
         return img, int(self.targets[idx])
 
 
@@ -394,21 +394,35 @@ def kvasir_dataloaders(
         set(range(len(train_set))) - set(valid_idx)
     )
 
+    # valid_set = copy.deepcopy(train_set)
+
+    # valid_set.dataset.samples = [
+    #     train_set.dataset.samples[i]
+    #     for i in valid_idx
+    # ]
+
+    # valid_set.targets = train_set.targets[valid_idx]
+
+    # train_set.dataset.samples = [
+    #     train_set.dataset.samples[i]
+    #     for i in train_idx
+    # ]
+
+    # train_set.targets = train_set.targets[train_idx]
+
+
+    # note: commented above code and added below code 
     valid_set = copy.deepcopy(train_set)
 
-    valid_set.dataset.samples = [
-        train_set.dataset.samples[i]
-        for i in valid_idx
-    ]
-
+    # validation split
+    valid_set.imgs = train_set.imgs[valid_idx]
     valid_set.targets = train_set.targets[valid_idx]
 
-    train_set.dataset.samples = [
-        train_set.dataset.samples[i]
-        for i in train_idx
-    ]
-
+    # train split
+    train_set.imgs = train_set.imgs[train_idx]
     train_set.targets = train_set.targets[train_idx]
+
+
 
     if class_to_replace is not None:
 
