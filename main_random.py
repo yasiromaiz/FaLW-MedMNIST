@@ -82,6 +82,41 @@ def main():
         assert len(forget_dataset) + len(retain_dataset) == len(
             train_loader_full.dataset
         )
+
+    # added the code for kvsair
+    elif args.dataset == "kvasir":
+
+        marked = forget_dataset.targets < 0
+
+        forget_dataset.imgs = forget_dataset.imgs[marked]
+        forget_dataset.targets = -forget_dataset.targets[marked] - 1
+
+        forget_loader = replace_loader_dataset(
+            forget_dataset,
+            seed=seed,
+            shuffle=True
+        )
+
+        retain_dataset = copy.deepcopy(marked_loader.dataset)
+
+        marked = retain_dataset.targets >= 0
+
+        retain_dataset.imgs = retain_dataset.imgs[marked]
+        retain_dataset.targets = retain_dataset.targets[marked]
+
+        retain_loader = replace_loader_dataset(
+            retain_dataset,
+            seed=seed,
+            shuffle=True
+        )
+
+        assert len(forget_dataset) + len(retain_dataset) == len(
+            train_loader_full.dataset
+        )
+
+
+
+
     else:
         try:
             marked = forget_dataset.targets < 0
