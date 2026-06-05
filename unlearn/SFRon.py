@@ -130,7 +130,12 @@ class SFRon(UnlearnMethod):
         self.momentum = 0.9
         self.weight_decay = 5e-4
         self.retain_lr = 0.01
-        self.n_iters = 1500
+        # self.n_iters = 1500
+        
+        # note: for quick check we added the iters from 1500 -> 50
+        self.n_iters = 50
+
+        
         self.unlearn_loss = "adaga"
         self.forget_freq = 5
         self.forget_alpha = 25
@@ -402,10 +407,3 @@ def SFRonExe(data_loaders,model,criterion,optimizer,epoch,args,mask=None):
     new_model = sfron.get_unlearned_model()
     model.load_state_dict(new_model.state_dict(), strict=True)
     return 0
-    
-    
-    
-    
-    
-    
-    
