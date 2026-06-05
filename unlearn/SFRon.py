@@ -133,7 +133,7 @@ class SFRon(UnlearnMethod):
         # self.n_iters = 1500
         
         # note: for quick check we added the iters from 1500 -> 50
-        self.n_iters = 50
+        self.n_iters = 10
 
         
         self.unlearn_loss = "adaga"

@@ -118,7 +118,12 @@ class KvasirDataset(Dataset):
 
         path, label = self.imgs[idx]
 
-        img = Image.open(path).convert("RGB")
+        # img = Image.open(path).convert("RGB")
+
+        # note : commented above line and added below [ with code ]
+
+        with Image.open(path) as img:
+            img = img.convert("RGB")
 
         if self.transform:
             img = self.transform(img)
@@ -439,20 +444,33 @@ def kvasir_dataloaders(
     train_loader = DataLoader(
         train_set,
         batch_size=batch_size,
-        shuffle=True
+        shuffle=True,
+        
+        # note added the new code to run the kvasir dataset
+        num_workers=2,
+        pin_memory=True
     )
 
     val_loader = DataLoader(
         valid_set,
         batch_size=batch_size,
-        shuffle=False
+        shuffle=False,
+        
+        # note added the new code to run the kvasir dataset
+        num_workers=2,
+        pin_memory=True
     )
 
     test_loader = DataLoader(
         test_set,
         batch_size=batch_size,
-        shuffle=False
+        shuffle=False,
+        
+        # note added the new code to run the kvasir dataset
+        num_workers=2,
+        pin_memory=True
     )
+
 
     return train_loader, val_loader, test_loader
 
