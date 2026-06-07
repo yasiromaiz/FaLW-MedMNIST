@@ -394,13 +394,27 @@ def SFRonExe(data_loaders,model,criterion,optimizer,epoch,args,mask=None):
     test_loader = data_loaders['test']
     
     
+    # unlearn_dataloaders = OrderedDict(  
+    #     forget_train=forget_loader, 
+    #     retain_train=retain_loader, 
+    #     forget_valid=None, 
+    #     valid_data = val_loader,
+    #     retain_valid=test_loader
+    # )
+
+
+    # the above code is used for bloodmnist, tissuemnist, dermamnist 
+    # but for kvasir we are updating it to this below code
+
     unlearn_dataloaders = OrderedDict(  
         forget_train=forget_loader, 
         retain_train=retain_loader, 
-        forget_valid=None, 
         valid_data = val_loader,
         retain_valid=test_loader
     )
+
+
+
     
     sfron = SFRon(model,criterion,args.save_dir,args)
     sfron.prepare_unlearn(unlearn_dataloaders)
