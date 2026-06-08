@@ -193,8 +193,8 @@ class SFRon(UnlearnMethod):
         # note: the above 2 lines works fully on the bloodmnist and dermamnist
         # we are changing for the kvasir dataset working ok
 
-        retain_validloader = self.unlearn_dataloaders('retain_valid', None)
-        forget_validloader = self.unlearn_dataloaders('forget_valid', None)
+        retain_validloader = self.unlearn_dataloaders.get('retain_valid', None)
+        forget_validloader = self.unlearn_dataloaders.get('forget_valid', None)
 
 
 
