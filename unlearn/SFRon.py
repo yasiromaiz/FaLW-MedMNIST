@@ -273,8 +273,25 @@ class SFRon(UnlearnMethod):
                 end_time = time.time()
                 steps_per_sec = log_remain_steps / (end_time - start_time)
                 # Reduce loss history over all processes:
-                avg_forget_loss = torch.tensor(running_forget_loss / log_forget_steps).item()
-                avg_forget_acc1 = torch.tensor(running_forget_acc1 / log_forget_steps).item()
+                
+                # avg_forget_loss = torch.tensor(running_forget_loss / log_forget_steps).item()
+                # avg_forget_acc1 = torch.tensor(running_forget_acc1 / log_forget_steps).item()
+
+
+                # note chaged from above 2 lines to below if else for kvasir
+                if log_forget_steps > 0:
+                    avg_forget_loss = torch.tensor(
+                        running_forget_loss / log_forget_steps
+                    ).item()
+
+                    avg_forget_acc1 = torch.tensor(
+                        running_forget_acc1 / log_forget_steps
+                    ).item()
+                else:
+                    avg_forget_loss = 0.0
+                    avg_forget_acc1 = 0.0
+
+
                 avg_remain_loss = torch.tensor(running_remain_loss / log_remain_steps).item()
                 avg_remain_acc1 = torch.tensor(running_remain_acc1 / log_remain_steps).item()
                 print(f"step={train_steps} Forget L:{avg_forget_loss:.4f} Acc:{avg_forget_acc1:.4f} Remain L:{avg_remain_loss:.4f} Acc:{avg_remain_acc1:.4f} LR:{lr}")
