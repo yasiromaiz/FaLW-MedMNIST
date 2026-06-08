@@ -186,8 +186,17 @@ class SFRon(UnlearnMethod):
         retain_train_iter = cycle(retain_trainloader)
         forget_train_iter = cycle(forget_trainloader)
 
-        retain_validloader = self.unlearn_dataloaders['retain_valid']
-        forget_validloader = self.unlearn_dataloaders['forget_valid']
+        # retain_validloader = self.unlearn_dataloaders['retain_valid']
+        # forget_validloader = self.unlearn_dataloaders['forget_valid']
+
+
+        # note: the above 2 lines works fully on the bloodmnist and dermamnist
+        # we are changing for the kvasir dataset working ok
+
+        retain_validloader = self.unlearn_dataloaders('retain_valid', None)
+        forget_validloader = self.unlearn_dataloaders('forget_valid', None)
+
+
 
         if self.sched == 'cosine':
             lr_scheduler = cosine_lr_scheduler
