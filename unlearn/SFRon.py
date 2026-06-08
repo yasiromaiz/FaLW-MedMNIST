@@ -133,7 +133,7 @@ class SFRon(UnlearnMethod):
         # self.n_iters = 1500
         
         # note: for quick check we added the iters from 1500 -> 50
-        self.n_iters = 10
+        self.n_iters = 5
 
         
         self.unlearn_loss = "adaga"
@@ -148,8 +148,12 @@ class SFRon(UnlearnMethod):
         self.mask = True 
         self.th = 1 # gamma in the paper
 
-        self.log_freq = 500
+        # self.log_freq = 500
+
+        # note: for quick test changed from 500 to 1
+        self.log_freq = 1
     
+
     def prepare_unlearn(self, unlearn_dataloaders: dict) -> None:
         self.unlearn_dataloaders = unlearn_dataloaders
         def avg_fn(averaged_model_parameter, model_parameter): return (
