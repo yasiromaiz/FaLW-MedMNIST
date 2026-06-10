@@ -130,17 +130,17 @@ class SFRon(UnlearnMethod):
         self.momentum = 0.9
         self.weight_decay = 5e-4
         self.retain_lr = 0.01
-        # self.n_iters = 1500
+        self.n_iters = 1500
         
-        # note: for quick check we added the iters from 1500 -> 50
-        self.n_iters = 5
+        # # note: for quick check we added the iters from 1500 -> 50
+        # self.n_iters = 5
 
         
         self.unlearn_loss = "adaga"
-        # self.forget_freq = 5
+        self.forget_freq = 5
 
-        # note : commented above line and reduce the value for for quick test
-        self.forget_freq = 1
+        # # note : commented above line and reduce the value for for quick test
+        # self.forget_freq = 1
 
 
         self.forget_alpha = 25
@@ -153,10 +153,10 @@ class SFRon(UnlearnMethod):
         self.mask = True 
         self.th = 1 # gamma in the paper
 
-        # self.log_freq = 500
+        self.log_freq = 500
 
-        # note: for quick test changed from 500 to 1
-        self.log_freq = 1
+        # # note: for quick test changed from 500 to 1
+        # self.log_freq = 1
     
 
     def prepare_unlearn(self, unlearn_dataloaders: dict) -> None:
